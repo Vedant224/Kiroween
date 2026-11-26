@@ -27,6 +27,8 @@
     "vitest": "5.1.1"
   },
   "overrides": {
+    "@babel/helper-string-parser": "7.29.14",
+    "@babel/types": "7.29.14",
     "@types/estree": "1.0.10",
     "source-map-js": "1.2.3",
     "tinybench": "6.2.4",
