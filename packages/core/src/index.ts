@@ -1,5 +1,12 @@
 // Public entry point for @seance/core.
-// Real modules (sm2, gate, scoring, structure map, ...) are added from Task 2 onward.
+// Re-exports the review engine (sm2, gate, scoring); more modules are added from Task 3 onward.
+
+export { MAX_INTERVAL_DAYS, newCard, nextReview } from "./sm2.js";
+export type { Card, Quality } from "./sm2.js";
+export { DEFAULT_PASS_MARK, gateDecision } from "./gate.js";
+export type { GateMode, GateReason, GateResult } from "./gate.js";
+export { EXPLAIN_MISS_BELOW, scoreQuiz } from "./scoring.js";
+export type { QuizAnswer, QuizQuestion, QuizResult } from "./scoring.js";
 
 /** Markers that delimit the auto-generated sections of PROJECT.md. */
 export const AUTO_START = "<!-- seance:auto:start -->";

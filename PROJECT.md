@@ -20,8 +20,8 @@ Seance gives a project rules for AI agents and this self-updating PROJECT.md, th
 | # | Task | Model | Status |
 |---|---|---|---|
 | 1 | Repo foundation and Kiro setup | Sonnet 5.5 | done (Nov 26) |
-| 2 | Review engine (SM-2, gate, scoring) | Opus spec / Sonnet code | next |
-| 3 | Structure map + structural questions | Sonnet 5.5 | planned |
+| 2 | Review engine (SM-2, gate, scoring) | Opus spec / Sonnet code | done (Nov 26) |
+| 3 | Structure map + structural questions | Sonnet 5.5 | next |
 | 4 | AI provider chain | Opus 5.5 | planned |
 | 5 | `seance init` | Sonnet 5.5 | planned |
 | 6 | `seance sync` | Opus 5.5 | planned |
