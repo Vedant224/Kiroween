@@ -1,0 +1,368 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateStructuralQuestions examples (E5) > snapshot of the fixture questions 1`] = `
+[
+  {
+    "answerIndex": 2,
+    "choices": [
+      "UserService.countAll",
+      "loadUser",
+      "UserService.findUser",
+    ],
+    "concept": "call-graph",
+    "id": "caller:log",
+    "kind": "mcq",
+    "prompt": "In \`project/src/user-service.ts\`, which function calls \`log\`?",
+    "source": {
+      "line": 8,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "main",
+      "countAll",
+      "multiply",
+      "add",
+    ],
+    "concept": "classes",
+    "id": "class-method:UserService",
+    "kind": "mcq",
+    "prompt": "Which of these is a method of class \`UserService\`?",
+    "source": {
+      "line": 5,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "log",
+      "add",
+    ],
+    "concept": "imports",
+    "id": "import-from:project/src/user-service.ts<NUL>./logger",
+    "kind": "mcq",
+    "prompt": "Which of these does \`project/src/user-service.ts\` import from \`./logger\`?",
+    "source": {
+      "line": 3,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 2,
+    "choices": [
+      "component.jsx",
+      "project/src/logger.ts",
+      "project/src/user-service.ts",
+      "project/src/math.ts",
+    ],
+    "concept": "exports",
+    "id": "export-owner:loadUser",
+    "kind": "mcq",
+    "prompt": "Which file exports \`loadUser\`?",
+    "source": {
+      "line": 18,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "UserService.countAll",
+      "loadUser",
+    ],
+    "concept": "async-functions",
+    "id": "async-pick:loadUser",
+    "kind": "mcq",
+    "prompt": "In \`project/src/user-service.ts\`, which function is async?",
+    "source": {
+      "line": 18,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "0",
+      "2",
+      "4",
+      "5",
+    ],
+    "concept": "parameters",
+    "id": "param-count:UserService.countAll",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`UserService.countAll\` in \`project/src/user-service.ts\` take?",
+    "source": {
+      "line": 13,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 2,
+    "choices": [
+      "loadUser",
+      "UserService.findUser",
+      "UserService.countAll",
+    ],
+    "concept": "call-graph",
+    "id": "caller:add",
+    "kind": "mcq",
+    "prompt": "In \`project/src/user-service.ts\`, which function calls \`add\`?",
+    "source": {
+      "line": 13,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "add",
+      "log",
+    ],
+    "concept": "imports",
+    "id": "import-from:project/src/user-service.ts<NUL>./math",
+    "kind": "mcq",
+    "prompt": "Which of these does \`project/src/user-service.ts\` import from \`./math\`?",
+    "source": {
+      "line": 2,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "project/src/logger.ts",
+      "project/src/math.ts",
+      "project/src/user-service.ts",
+      "project/src/index.ts",
+    ],
+    "concept": "exports",
+    "id": "export-owner:square",
+    "kind": "mcq",
+    "prompt": "Which file exports \`square\`?",
+    "source": {
+      "line": 6,
+      "path": "project/src/math.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "UserService.countAll",
+      "UserService.findUser",
+    ],
+    "concept": "async-functions",
+    "id": "async-pick:UserService.findUser",
+    "kind": "mcq",
+    "prompt": "In \`project/src/user-service.ts\`, which function is async?",
+    "source": {
+      "line": 8,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "2",
+      "3",
+      "4",
+      "5",
+    ],
+    "concept": "parameters",
+    "id": "param-count:multiply",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`multiply\` in \`project/src/math.ts\` take?",
+    "source": {
+      "line": 8,
+      "path": "project/src/math.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "square",
+      "add",
+    ],
+    "concept": "call-graph",
+    "id": "caller:multiply",
+    "kind": "mcq",
+    "prompt": "In \`project/src/math.ts\`, which function calls \`multiply\`?",
+    "source": {
+      "line": 6,
+      "path": "project/src/math.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "project/src/logger.ts",
+      "project/src/index.ts",
+      "project/src/user-service.ts",
+      "project/src/math.ts",
+    ],
+    "concept": "exports",
+    "id": "export-owner:log",
+    "kind": "mcq",
+    "prompt": "Which file exports \`log\`?",
+    "source": {
+      "line": 2,
+      "path": "project/src/logger.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:App",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`App\` in \`component.jsx\` take?",
+    "source": {
+      "line": 2,
+      "path": "component.jsx",
+    },
+  },
+  {
+    "answerIndex": 2,
+    "choices": [
+      "project/src/math.ts",
+      "project/src/logger.ts",
+      "project/src/user-service.ts",
+      "component.jsx",
+    ],
+    "concept": "exports",
+    "id": "export-owner:UserService",
+    "kind": "mcq",
+    "prompt": "Which file exports \`UserService\`?",
+    "source": {
+      "line": 5,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "1",
+      "2",
+      "3",
+      "4",
+    ],
+    "concept": "parameters",
+    "id": "param-count:loadUser",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`loadUser\` in \`project/src/user-service.ts\` take?",
+    "source": {
+      "line": 18,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 3,
+    "choices": [
+      "project/src/logger.ts",
+      "project/src/user-service.ts",
+      "project/src/index.ts",
+      "project/src/math.ts",
+    ],
+    "concept": "exports",
+    "id": "export-owner:add",
+    "kind": "mcq",
+    "prompt": "Which file exports \`add\`?",
+    "source": {
+      "line": 2,
+      "path": "project/src/math.ts",
+    },
+  },
+  {
+    "answerIndex": 2,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:add",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`add\` in \`project/src/math.ts\` take?",
+    "source": {
+      "line": 2,
+      "path": "project/src/math.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:UserService.findUser",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`UserService.findUser\` in \`project/src/user-service.ts\` take?",
+    "source": {
+      "line": 8,
+      "path": "project/src/user-service.ts",
+    },
+  },
+  {
+    "answerIndex": 0,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:main",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`main\` in \`project/src/index.ts\` take?",
+    "source": {
+      "line": 5,
+      "path": "project/src/index.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:log",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`log\` in \`project/src/logger.ts\` take?",
+    "source": {
+      "line": 2,
+      "path": "project/src/logger.ts",
+    },
+  },
+  {
+    "answerIndex": 1,
+    "choices": [
+      "0",
+      "1",
+      "2",
+      "3",
+    ],
+    "concept": "parameters",
+    "id": "param-count:square",
+    "kind": "mcq",
+    "prompt": "How many parameters does \`square\` in \`project/src/math.ts\` take?",
+    "source": {
+      "line": 6,
+      "path": "project/src/math.ts",
+    },
+  },
+]
+`;

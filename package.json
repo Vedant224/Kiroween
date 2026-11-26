@@ -18,6 +18,7 @@
     "test:core": "vitest run packages/core",
     "typecheck": "tsc -p packages/core/tsconfig.check.json",
     "demo:review": "npm run build -w @seance/core && node scripts/demo-review.mjs",
+    "demo:map": "npm run build -w @seance/core && node scripts/demo-map.mjs",
     "audit": "npm audit --audit-level=high"
   },
   "devDependencies": {

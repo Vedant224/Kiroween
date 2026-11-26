@@ -21,8 +21,8 @@ Seance gives a project rules for AI agents and this self-updating PROJECT.md, th
 |---|---|---|---|
 | 1 | Repo foundation and Kiro setup | Sonnet 5.5 | done (Nov 26) |
 | 2 | Review engine (SM-2, gate, scoring) | Opus spec / Sonnet code | done (Nov 26) |
-| 3 | Structure map + structural questions | Sonnet 5.5 | next |
-| 4 | AI provider chain | Opus 5.5 | planned |
+| 3 | Structure map + structural questions | Sonnet 5.5 | done (Nov 26) |
+| 4 | AI provider chain | Opus 5.5 | next |
 | 5 | `seance init` | Sonnet 5.5 | planned |
 | 6 | `seance sync` | Opus 5.5 | planned |
 | 7 | `seance quiz` / `seance review` | Sonnet 5.5 | planned |
@@ -51,6 +51,7 @@ docs/           KIRO_USAGE.md, usage-log.md
 - "Ask until 90% sure" is a measurable completeness checklist in `init`, not an LLM's self-reported confidence.
 - AI output is never trusted: zod validation, then fallback to deterministic questions from the AST.
 - Dependencies are pinned and at least 7 days old; transitive exceptions are pinned with `overrides` in the root `package.json`.
+- Task 8 reminder: the hosted API must validate an incoming `StructureMap` with a zod schema with caps (for example 50 files, 500 entries per list, 200 chars per name, `schemaVersion: 1`) before calling `generateStructuralQuestions`, which trusts its input.
 - npm 12.2.3 crashes on install in this repo; use `npx -y npm@11.21.3 install` until that's fixed.
 
 <!-- seance:auto:start -->

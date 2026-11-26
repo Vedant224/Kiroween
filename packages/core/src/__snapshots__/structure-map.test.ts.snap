@@ -1,0 +1,352 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildStructureMap: extraction (E1-E3) > snapshot of the full fixture map 1`] = `
+{
+  "files": [
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [
+        {
+          "line": 3,
+          "message": "Unexpected token (3:0)",
+        },
+      ],
+      "exports": [],
+      "functions": [],
+      "hasUnknownExports": false,
+      "imports": [],
+      "language": "typescript",
+      "lines": 2,
+      "parsed": false,
+      "path": "broken.ts",
+    },
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [
+        {
+          "kind": "default",
+          "line": 2,
+          "name": "App",
+        },
+      ],
+      "functions": [
+        {
+          "async": false,
+          "calledNames": [],
+          "calls": [],
+          "exported": true,
+          "line": 2,
+          "mentionedNames": [
+            "className",
+            "div",
+            "props",
+            "title",
+          ],
+          "name": "App",
+          "params": 1,
+          "plainParams": true,
+        },
+      ],
+      "hasUnknownExports": false,
+      "imports": [],
+      "language": "javascript",
+      "lines": 4,
+      "parsed": true,
+      "path": "component.jsx",
+    },
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [
+        {
+          "from": "./user-service",
+          "kind": "reexport",
+          "line": 2,
+          "name": "loadUser",
+        },
+        {
+          "kind": "default",
+          "line": 5,
+          "name": "main",
+        },
+      ],
+      "functions": [
+        {
+          "async": false,
+          "calledNames": [
+            "add",
+          ],
+          "calls": [
+            "math.add",
+          ],
+          "exported": true,
+          "line": 5,
+          "mentionedNames": [
+            "add",
+            "math",
+          ],
+          "name": "main",
+          "params": 0,
+          "plainParams": true,
+        },
+      ],
+      "hasUnknownExports": false,
+      "imports": [
+        {
+          "kind": "import",
+          "line": 3,
+          "names": [],
+          "namespace": "math",
+          "source": "./math",
+          "typeOnly": false,
+        },
+      ],
+      "language": "typescript",
+      "lines": 7,
+      "parsed": true,
+      "path": "project/src/index.ts",
+    },
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [
+        {
+          "kind": "named",
+          "line": 2,
+          "name": "log",
+        },
+      ],
+      "functions": [
+        {
+          "async": false,
+          "calledNames": [
+            "log",
+          ],
+          "calls": [
+            "console.log",
+          ],
+          "exported": true,
+          "line": 2,
+          "mentionedNames": [
+            "console",
+            "log",
+            "message",
+          ],
+          "name": "log",
+          "params": 1,
+          "plainParams": true,
+        },
+      ],
+      "hasUnknownExports": false,
+      "imports": [],
+      "language": "typescript",
+      "lines": 4,
+      "parsed": true,
+      "path": "project/src/logger.ts",
+    },
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [
+        {
+          "kind": "named",
+          "line": 2,
+          "name": "add",
+        },
+        {
+          "kind": "named",
+          "line": 6,
+          "name": "square",
+        },
+      ],
+      "functions": [
+        {
+          "async": false,
+          "calledNames": [],
+          "calls": [],
+          "exported": true,
+          "line": 2,
+          "mentionedNames": [
+            "a",
+            "b",
+          ],
+          "name": "add",
+          "params": 2,
+          "plainParams": true,
+        },
+        {
+          "async": false,
+          "calledNames": [],
+          "calls": [],
+          "exported": false,
+          "line": 8,
+          "mentionedNames": [
+            "a",
+            "b",
+          ],
+          "name": "multiply",
+          "params": 2,
+          "plainParams": true,
+        },
+        {
+          "async": false,
+          "calledNames": [
+            "multiply",
+          ],
+          "calls": [
+            "multiply",
+          ],
+          "exported": true,
+          "line": 6,
+          "mentionedNames": [
+            "multiply",
+            "x",
+          ],
+          "name": "square",
+          "params": 1,
+          "plainParams": true,
+        },
+      ],
+      "hasUnknownExports": false,
+      "imports": [],
+      "language": "typescript",
+      "lines": 10,
+      "parsed": true,
+      "path": "project/src/math.ts",
+    },
+    {
+      "classes": [
+        {
+          "accessors": [],
+          "exported": true,
+          "line": 5,
+          "methods": [
+            {
+              "async": false,
+              "calledNames": [
+                "add",
+              ],
+              "calls": [
+                "add",
+              ],
+              "line": 13,
+              "mentionedNames": [
+                "a",
+                "add",
+                "b",
+              ],
+              "name": "countAll",
+              "params": 2,
+              "plainParams": true,
+              "static": false,
+            },
+            {
+              "async": true,
+              "calledNames": [
+                "get",
+                "log",
+              ],
+              "calls": [
+                "log",
+              ],
+              "line": 8,
+              "mentionedNames": [
+                "db",
+                "get",
+                "id",
+                "log",
+              ],
+              "name": "findUser",
+              "params": 1,
+              "plainParams": true,
+              "static": false,
+            },
+          ],
+          "name": "UserService",
+        },
+      ],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [
+        {
+          "kind": "named",
+          "line": 5,
+          "name": "UserService",
+        },
+        {
+          "kind": "named",
+          "line": 18,
+          "name": "loadUser",
+        },
+      ],
+      "functions": [
+        {
+          "async": true,
+          "calledNames": [
+            "findUser",
+          ],
+          "calls": [
+            "s.findUser",
+          ],
+          "exported": true,
+          "line": 18,
+          "mentionedNames": [
+            "UserService",
+            "findUser",
+            "id",
+            "s",
+          ],
+          "name": "loadUser",
+          "params": 1,
+          "plainParams": true,
+        },
+      ],
+      "hasUnknownExports": false,
+      "imports": [
+        {
+          "kind": "import",
+          "line": 3,
+          "names": [
+            "log",
+          ],
+          "source": "./logger",
+          "typeOnly": false,
+        },
+        {
+          "kind": "import",
+          "line": 2,
+          "names": [
+            "add",
+          ],
+          "source": "./math",
+          "typeOnly": false,
+        },
+      ],
+      "language": "typescript",
+      "lines": 21,
+      "parsed": true,
+      "path": "project/src/user-service.ts",
+    },
+    {
+      "classes": [],
+      "commonjsExports": [],
+      "errors": [],
+      "exports": [],
+      "functions": [],
+      "hasUnknownExports": false,
+      "imports": [],
+      "language": "python",
+      "lines": 3,
+      "parsed": false,
+      "path": "script.py",
+    },
+  ],
+  "schemaVersion": 1,
+}
+`;

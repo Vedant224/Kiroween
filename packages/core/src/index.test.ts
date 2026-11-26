@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { AUTO_END, AUTO_START, hasAutoSection } from "./index.js";
+import { AUTO_END, AUTO_START, MAP_LIMITS, buildStructureMap, generateStructuralQuestions, hasAutoSection } from "./index.js";
 
 describe("hasAutoSection", () => {
   it("finds a section when start comes before end", () => {
@@ -18,5 +18,14 @@ describe("hasAutoSection", () => {
         expect(hasAutoSection(before + AUTO_START + inside + AUTO_END + after)).toBe(true);
       }),
     );
+  });
+});
+
+describe("public exports", () => {
+  it("exposes the structure map and question generator", () => {
+    expect(MAP_LIMITS.maxFiles).toBe(50);
+    const map = buildStructureMap([{ path: "a.ts", content: "export function f(a) {}" }]);
+    expect(map.files).toHaveLength(1);
+    expect(generateStructuralQuestions(map).map((q) => q.id)).toEqual(["param-count:f"]);
   });
 });
