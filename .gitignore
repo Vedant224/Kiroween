@@ -1,0 +1,23 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Secrets: never commit real keys. .env.example is the template.
+.env
+.env.*
+!.env.example
+
+# Netlify local state
+.netlify/
+
+# Seance runtime state created when dogfooding the CLI locally
+.seance/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# IMPORTANT: never add .kiro/ here. Judges require it in the repo.
