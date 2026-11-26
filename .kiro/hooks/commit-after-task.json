@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Commit and push after each spec task",
+      "trigger": "PostTaskExec",
+      "description": "After a spec task completes, reminds the agent to run tests, update PROJECT.md and KIRO_USAGE.md, then commit and push so every task has a restore point.",
+      "action": {
+        "type": "agent",
+        "prompt": "A spec task just finished. Run the tests for the package you changed. If they pass: update the task status in PROJECT.md and add a short note to docs/KIRO_USAGE.md, stage the changed files by name (never .env or secrets), commit as \"Task N: <what changed>\", and run `git push origin main`. If tests fail, do not commit; report the failure instead. Never force-push."
+      }
+    }
+  ]
+}

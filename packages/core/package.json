@@ -1,0 +1,20 @@
+{
+  "name": "@seance/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pure logic for Seance: SM-2, gate decision, scoring, structure map, question generator, PROJECT.md merge, AI chain.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  }
+}

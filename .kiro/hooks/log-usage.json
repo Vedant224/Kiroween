@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Log usage after each turn",
+      "trigger": "Stop",
+      "description": "Zero-token hook: appends a timestamp and git diff --stat to docs/usage-log.md after every agent turn. Raw material for docs/KIRO_USAGE.md.",
+      "action": {
+        "type": "command",
+        "command": "node scripts/log-usage.mjs",
+        "timeout": 15
+      }
+    }
+  ]
+}

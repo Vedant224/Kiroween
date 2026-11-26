@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Test core on save",
+      "trigger": "PostFileSave",
+      "description": "Runs the packages/core vitest suite (including fast-check properties) whenever a core TypeScript file is saved, so regressions in pure logic show up immediately.",
+      "matcher": "packages[\\\\/]core[\\\\/].*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "npm run test:core --silent",
+        "timeout": 120
+      }
+    }
+  ]
+}

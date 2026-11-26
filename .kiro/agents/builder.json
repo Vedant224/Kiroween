@@ -1,0 +1,18 @@
+{
+  "name": "builder",
+  "description": "Implements spec tasks one at a time, with tests, following steering.",
+  "model": "claude-sonnet-5.5",
+  "tools": ["read", "write", "shell"],
+  "resources": [
+    "file://PROJECT.md"
+  ],
+  "permissions": {
+    "rules": [
+      { "capability": "shell", "match": ["npm test*", "npm run *", "npx vitest *", "npx tsc *", "git status*", "git diff*", "git log*", "git add *", "git commit *", "git push origin main"], "effect": "allow" },
+      { "capability": "shell", "match": ["npm install*", "npm i *", "npm add*", "npx -y *"], "effect": "ask" },
+      { "capability": "shell", "match": ["git push --force*", "git push -f*", "git reset --hard*", "git clean*", "rm -rf *", "Remove-Item -Recurse*"], "effect": "deny" }
+    ]
+  },
+  "prompt": "You are the builder for Seance. Read PROJECT.md first, then the current spec's tasks.md. Implement one task at a time. Write or update tests beside the code, run `npm run test:core` (or the package's tests) and fix failures before reporting. Prefer simple code a beginner can read, and add a 1-2 line comment at the top of each new file explaining its purpose. Ask before adding dependencies. When a task is done, update the task status in PROJECT.md and add a short note to docs/KIRO_USAGE.md. Then, only if tests pass: stage the changed files by name (never .env), commit as `Task N: <what changed>`, and run `git push origin main`.",
+  "welcomeMessage": "Builder (Sonnet 5.5). Which spec task should I implement?"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "seance-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Seance: AI agent rules, a self-updating PROJECT.md, and quizzes on what the AI just built.",
+  "license": "MIT",
+  "author": "Vedant Hande",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "test:core": "vitest run packages/core",
+    "typecheck": "tsc -p packages/core/tsconfig.json --noEmit",
+    "audit": "npm audit --audit-level=high"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "fast-check": "4.10.3",
+    "typescript": "7.0.2",
+    "vitest": "5.1.1"
+  },
+  "overrides": {
+    "@types/estree": "1.0.10",
+    "source-map-js": "1.2.3",
+    "tinybench": "6.2.4",
+    "tinyexec": "1.3.1"
+  }
+}
