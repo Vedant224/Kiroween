@@ -55,8 +55,9 @@ Three agents in `.kiro/agents/`, each pinned to a model to control credit spend:
 ## 7. Property-based testing
 - fast-check wired up in Task 1 (smoke property on the PROJECT.md marker check).
 - Planned properties: SM-2 ease never below 1.3; q<3 resets repetitions; intervals never shrink on successes; score in [0,1]; strict gate never passes below pass mark; PROJECT.md merge preserves text outside markers and is idempotent; correct answer always among choices.
-- Task 2: 14 properties written from the design table (P1-P13 plus P4a) across `sm2.test.ts`, `gate.test.ts`, `scoring.test.ts`.
-- Bugs PBT caught: none in Task 2; all 14 properties passed on the first run, so the checks were written from the spec's algorithm. The properties still pin the rules (ease floor, 365-day cap, strict gate) against later edits. One property needed a small adjustment: P8 expects score 0, not 1, for an empty quiz (req 3.8).
+- Task 2: 18 properties across `sm2.test.ts`, `gate.test.ts`, `scoring.test.ts`: the 14 from the design table (P1-P13 plus P4a) and 4 added after review (P9a, P9b, P10a, P10b). The gate properties now use a generator that often makes score equal passMark.
+- Bugs PBT caught: none in Task 2; the original 14 properties passed on the first run, so the checks were written from the spec's algorithm. The properties still pin the rules (ease floor, 365-day cap, strict gate) against later edits. One property needed a small adjustment: P8 expects score 0, not 1, for an empty quiz (req 3.8).
+- The reviewer agent found that the spec's own "old ease" example used q=4, which leaves ease unchanged, so the test could not fail; and a spec gap where a card with interval 0 stayed due today forever. Both fixed before Task 3.
 - **(Vedant):**
 
 ## 8. Kiro powers
@@ -76,10 +77,11 @@ Three agents in `.kiro/agents/`, each pinned to a model to control credit spend:
 - Commit-and-push rule added in three places: a steering line (every chat sees it), the `builder` agent's prompt and permissions (`git add`/`commit`/`push origin main` allowed, force-push denied), and a `PostTaskExec` hook (fires even if the model forgets the rule).
 
 ### Task 2: Review engine (Nov 26, spec `.kiro/specs/review-engine/`, builder agent)
-- Built `sm2.ts`, `gate.ts` and `scoring.ts` in `packages/core/src/` from the approved EARS spec, following `tasks.md` in order: 29 example tests and 14 fast-check properties, plus `scripts/demo-review.mjs` (`npm run demo:review`) that prints the 5, 5, 2, 4 demo sequence.
+- Built `sm2.ts`, `gate.ts` and `scoring.ts` in `packages/core/src/` from the approved EARS spec, following `tasks.md` in order: after the review fixes, 56 tests in `packages/core` (38 examples, 3 of them in `index.test.ts`, and 18 fast-check properties; the first version had fewer), plus `scripts/demo-review.mjs` (`npm run demo:review`) that prints the 5, 5, 2, 4 demo sequence.
 - The spec's decisions (ease rounded to 2 decimals, 365-day cap, old ease for the interval, strict gate by default) were already written down, so the code needed no design choices and the tests compare values exactly.
 - Spec gaps found while coding: the property P8 ("all correct gives score 1") is false for an empty quiz, which scores 0 by req 3.8, so the test handles that case. The spec also did not say whether an empty quiz with stray answers throws; the code returns the empty result first, as design step 1 says.
-- Floating point: E3 scores (0.48, 0.56) are compared with `toBeCloseTo`, since 2.4/5 style divisions are not guaranteed exact; ease values use `toBe` because they are rounded.
+- Floating point: the quiz score is now rounded to 4 decimals (req 3.2), so E3 (0.48, 0.56) and a 0.7 pass mark compare exactly with `toBe`, like the rounded ease values.
+- The reviewer agent found that the spec's own "old ease" example used q=4, which leaves ease unchanged, so the test could not fail; and a spec gap where a card with interval 0 stayed due today forever. Both fixed before Task 3.
 
 ## Credit log
 Start: 3,995 credits (Nov 26). Checkpoints: Nov 27 >= 3,300, Nov 29 >= 2,400, Dec 1 >= 1,400, Dec 3 >= 600.

@@ -40,14 +40,32 @@ describe("nextReview examples", () => {
     }
   });
 
-  it("uses the OLD ease to grow the interval", () => {
+  it("uses the OLD ease to grow the interval (E1)", () => {
+    // Rating 5 raises ease to 2.6. The new ease would give round(6 * 2.6) = 16; the old gives 15.
     const card: Card = { ease: 2.5, interval: 6, repetitions: 2, dueAt: "2026-11-27" };
-    expect(nextReview(card, 4, "2026-11-27")).toEqual({
-      ease: 2.5,
+    expect(nextReview(card, 5, "2026-11-27")).toEqual({
+      ease: 2.6,
       interval: 15,
       repetitions: 3,
       dueAt: "2026-12-12",
     });
+  });
+
+  it("never returns an interval below 1 day (a card with interval 0 and 2 repetitions)", () => {
+    const card: Card = { ease: 2.5, interval: 0, repetitions: 2, dueAt: "2026-11-27" };
+    expect(nextReview(card, 5, "2026-11-27")).toEqual({
+      ease: 2.6,
+      interval: 1,
+      repetitions: 3,
+      dueAt: "2026-11-28",
+    });
+  });
+
+  it("adds days across a leap day: 2024-02-28 + 6 days is 2024-03-05", () => {
+    const card: Card = { ease: 2.5, interval: 1, repetitions: 1, dueAt: "2024-02-28" };
+    const next = nextReview(card, 5, "2024-02-28");
+    expect(next.interval).toBe(6);
+    expect(next.dueAt).toBe("2024-03-05");
   });
 
   it("caps the interval at 365 days", () => {
@@ -81,6 +99,21 @@ describe("nextReview input checks", () => {
   it("rejects a bad today or bad dueAt", () => {
     expect(() => nextReview(card, 4, "2026-02-30")).toThrow(RangeError);
     expect(() => nextReview({ ...card, dueAt: "nope" }, 4, "2026-11-27")).toThrow(RangeError);
+  });
+
+  it("checks leap years: 2025-02-29 throws, 2024-02-29 is accepted", () => {
+    expect(() => newCard("2025-02-29")).toThrow(RangeError);
+    expect(() => nextReview(card, 4, "2025-02-29")).toThrow(RangeError);
+    expect(() => nextReview({ ...card, dueAt: "2025-02-29" }, 4, "2026-11-27")).toThrow(RangeError);
+    expect(newCard("2024-02-29").dueAt).toBe("2024-02-29");
+    expect(() => nextReview(card, 4, "2024-02-29")).not.toThrow();
+  });
+
+  it("rejects a month or day out of range, or a date without zero padding", () => {
+    for (const bad of ["2026-13-01", "2026-00-10", "2026-2-3", "2026-01-32", "2026-01-00"]) {
+      expect(() => newCard(bad)).toThrow(RangeError);
+      expect(() => nextReview(card, 4, bad)).toThrow(RangeError);
+    }
   });
 
   it("rejects bad card fields", () => {
@@ -161,10 +194,11 @@ describe("nextReview properties", () => {
     );
   });
 
-  it("P4a: interval is at most 365 and ease has at most 2 decimals", () => {
+  it("P4a: interval is between 1 and 365 and ease has at most 2 decimals", () => {
     fc.assert(
       fc.property(validCard, quality, isoDate, (card, q, today) => {
         const next = nextReview(card, q, today);
+        expect(next.interval).toBeGreaterThanOrEqual(1);
         expect(next.interval).toBeLessThanOrEqual(MAX_INTERVAL_DAYS);
         expect(Math.round(next.ease * 100) / 100).toBe(next.ease);
       }),
@@ -186,6 +220,8 @@ describe("nextReview properties", () => {
       fc.integer({ min: -1000, max: -1 }),
       fc.integer({ min: 6, max: 1000 }),
       fc.double({ noNaN: false }).filter((x) => !Number.isInteger(x)),
+      // Non-integers inside 0..5, such as 2.5.
+      fc.double({ min: 0, max: 5, noNaN: true }).filter((x) => !Number.isInteger(x)),
     );
     fc.assert(
       fc.property(validCard, badQuality, isoDate, (card, q, today) => {

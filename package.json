@@ -16,7 +16,7 @@
   "scripts": {
     "test": "vitest run",
     "test:core": "vitest run packages/core",
-    "typecheck": "tsc -p packages/core/tsconfig.json --noEmit",
+    "typecheck": "tsc -p packages/core/tsconfig.check.json",
     "demo:review": "npm run build -w @seance/core && node scripts/demo-review.mjs",
     "audit": "npm audit --audit-level=high"
   },

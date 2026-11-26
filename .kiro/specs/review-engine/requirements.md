@@ -13,7 +13,7 @@ Three pure functions in `packages/core/src/`: `nextReview` (SM-2), `gateDecision
 1.3 WHEN q >= 3, THE SYSTEM SHALL add 1 to repetitions.
 1.4 WHEN q >= 3 and the new repetitions is 1, THE SYSTEM SHALL set interval to 1.
 1.5 WHEN q >= 3 and the new repetitions is 2, THE SYSTEM SHALL set interval to 6.
-1.6 WHEN q >= 3 and the new repetitions is 3 or more, THE SYSTEM SHALL set interval to min(365, round(old interval * old ease)).
+1.6 WHEN q >= 3 and the new repetitions is 3 or more, THE SYSTEM SHALL set interval to max(1, min(365, round(old interval * old ease))), so a card is never due again on the same day.
 1.7 THE SYSTEM SHALL set ease to max(1.3, ease + 0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)), rounded to 2 decimal places, for every q, including q < 3.
 1.13 THE SYSTEM SHALL never return an interval greater than 365 days (`MAX_INTERVAL_DAYS`).
 1.8 THE SYSTEM SHALL set dueAt to `today` plus `interval` calendar days, as an ISO date.
@@ -34,7 +34,7 @@ Three pure functions in `packages/core/src/`: `nextReview` (SM-2), `gateDecision
 
 ## 3. `scoreQuiz(questions, answers)`
 3.1 THE SYSTEM SHALL return `{ score, missedConcepts, answered, total }` with score in [0, 1].
-3.2 THE SYSTEM SHALL weight every question equally: score = sum of question points / number of questions.
+3.2 THE SYSTEM SHALL weight every question equally: score = sum of question points / number of questions, rounded to 4 decimal places (so float sums like 0.7000000000000001 compare correctly with the pass mark).
 3.3 WHEN a choice question (`mcq` or `what-if`) is answered with its correct index, THE SYSTEM SHALL give 1 point, otherwise 0.
 3.4 WHEN an `explain` question has a graded score s, THE SYSTEM SHALL give s points (partial credit).
 3.5 WHEN a question has no answer, THE SYSTEM SHALL give 0 points and count it as missed.
@@ -45,6 +45,8 @@ Three pure functions in `packages/core/src/`: `nextReview` (SM-2), `gateDecision
 3.10 IF two questions share an id, THEN THE SYSTEM SHALL throw a RangeError.
 3.11 IF a choice answer index is not an integer in range of the question's choices, or an answer's kind does not match its question, THEN THE SYSTEM SHALL throw a RangeError.
 3.12 IF a graded explain score is not a finite number in [0, 1], THEN THE SYSTEM SHALL throw a RangeError.
+3.13 IF a choice question has fewer than 2 choices, or its correct `answerIndex` is not an integer in range of its choices, THEN THE SYSTEM SHALL throw a RangeError.
+3.14 WHEN the quiz has no questions, THE SYSTEM SHALL ignore any answers and return the empty result of 3.8 (documented choice; see open question 13).
 
 ## 4. Module layout
 4.1 THE SYSTEM SHALL put each function in its own module (`sm2.ts`, `gate.ts`, `scoring.ts`) with a `*.test.ts` beside it, and re-export all public names from `packages/core/src/index.ts` as named exports.
@@ -62,4 +64,6 @@ Three pure functions in `packages/core/src/`: `nextReview` (SM-2), `gateDecision
 9. **Validation:** hand-written checks, no zod in `core` for these three functions (inputs come from our own code; zod is used at trust boundaries in Tasks 4 and 8).
 10. **Quiz size:** `scoreQuiz` accepts any number of questions, not only 5; Task 4 enforces the 3 + 1 + 1 format.
 11. **Maximum interval:** DECIDED: cap at 365 days (req 1.13), so every card comes back at least once a year. Classic SM-2 has no cap.
+13. **Answers on an empty quiz:** ignored rather than rejected (3.14). An empty quiz means there was nothing to test, so there is nothing to validate against. Added after review.
+14. **Minimum interval of 1 day:** added after review. A card with interval 0 and 2+ repetitions used to stay due today forever.
 12. **Why SM-2 and not FSRS:** SM-2 (1987) is about 15 lines and a beginner can explain every line, which fits Seance's message. FSRS (2022, used by Anki) predicts better but needs 17+ tuned parameters. Revisit after the hackathon.

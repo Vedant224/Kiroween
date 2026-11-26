@@ -32,7 +32,7 @@ function parseIsoDate(value: string, field: string): number {
   return time;
 }
 
-/** Adds whole days to an ISO date. UTC avoids daylight-saving bugs. */
+/** Adds whole days to an ISO date. UTC avoids daylight-saving bugs. Years above 9999 are out of range (unreachable in practice). */
 function addDays(isoDate: string, days: number): string {
   const time = parseIsoDate(isoDate, "date") + days * MS_PER_DAY;
   return new Date(time).toISOString().slice(0, 10);
@@ -99,7 +99,8 @@ export function nextReview(card: Card, quality: number, today: string): Card {
       interval = 6; // second success: in 6 days
     } else {
       // Later successes: grow by the OLD ease (the rating judges the last interval).
-      interval = Math.min(MAX_INTERVAL_DAYS, Math.round(card.interval * card.ease));
+      // At least 1 day, so a card with interval 0 is never due again on the same day.
+      interval = Math.max(1, Math.min(MAX_INTERVAL_DAYS, Math.round(card.interval * card.ease)));
     }
   }
 

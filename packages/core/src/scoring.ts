@@ -9,6 +9,9 @@ export type QuizAnswer =
   | { questionId: string; kind: "choice"; choiceIndex: number }
   | { questionId: string; kind: "graded"; score: number }; // score comes from the AI grader
 
+type ChoiceAnswer = Extract<QuizAnswer, { kind: "choice" }>;
+type GradedAnswer = Extract<QuizAnswer, { kind: "graded" }>;
+
 export interface QuizResult {
   /** Average points per question, from 0 to 1. */
   score: number;
@@ -22,6 +25,10 @@ export interface QuizResult {
 
 /** An explain answer graded below this counts as a missed concept. */
 export const EXPLAIN_MISS_BELOW = 0.5;
+
+function round4(x: number): number {
+  return Math.round(x * 10_000) / 10_000;
+}
 
 /** Makes a lookup by id. Throws on a repeated id. */
 function indexById<T>(items: T[], getId: (item: T) => string, label: string): Map<string, T> {
@@ -56,14 +63,24 @@ function checkAnswer(question: QuizQuestion, answer: QuizAnswer): void {
   }
 }
 
+/** Throws unless a choice question has 2+ choices and a valid correct answerIndex (req 3.13). */
+function checkQuestion(question: QuizQuestion): void {
+  if (question.kind === "explain") return;
+  const { id, choices, answerIndex } = question;
+  if (!Array.isArray(choices) || choices.length < 2) {
+    throw new RangeError(`question ${id} needs at least 2 choices`);
+  }
+  if (!Number.isInteger(answerIndex) || answerIndex < 0 || answerIndex >= choices.length) {
+    throw new RangeError(`answerIndex for ${id} must be an integer in 0..${choices.length - 1}, got ${String(answerIndex)}`);
+  }
+}
+
 /** Points for one question: 0 to 1. A missing answer earns 0. */
 function pointsFor(question: QuizQuestion, answer: QuizAnswer | undefined): number {
   if (!answer) return 0;
-  if (question.kind === "explain") {
-    return answer.kind === "graded" ? answer.score : 0;
-  }
-  if (answer.kind !== "choice") return 0;
-  return answer.choiceIndex === question.answerIndex ? 1 : 0;
+  // checkAnswer already made sure the answer kind fits the question kind, so the casts are safe.
+  if (question.kind === "explain") return (answer as GradedAnswer).score;
+  return (answer as ChoiceAnswer).choiceIndex === question.answerIndex ? 1 : 0;
 }
 
 /** Is the question a missed concept? Choice: 0 points. Explain: graded below 0.5. */
@@ -78,6 +95,7 @@ export function scoreQuiz(questions: QuizQuestion[], answers: QuizAnswer[]): Qui
   }
 
   const questionById = indexById(questions, (q) => q.id, "question");
+  for (const question of questions) checkQuestion(question);
   const answerById = indexById(answers, (a) => a.questionId, "answer");
   for (const [id, answer] of answerById) {
     const question = questionById.get(id);
@@ -95,7 +113,8 @@ export function scoreQuiz(questions: QuizQuestion[], answers: QuizAnswer[]): Qui
     }
   }
 
-  // Clamp so floating point error can never push the score outside 0..1.
-  const score = Math.min(1, Math.max(0, totalPoints / questions.length));
+  // Clamp so floating point error can never push the score outside 0..1,
+  // then round to 4 decimals so 0.7000000000000001 compares equal to a 0.7 pass mark.
+  const score = round4(Math.min(1, Math.max(0, totalPoints / questions.length)));
   return { score, missedConcepts: missed, answered: answerById.size, total: questions.length };
 }

@@ -34,7 +34,7 @@ export function scoreQuiz(questions: QuizQuestion[], answers: QuizAnswer[]): Qui
 **`nextReview`** (req 1.1-1.11)
 1. Validate q, card fields, `today`, `card.dueAt`.
 2. `d = 5 - q`; `newEase = round2(max(1.3, ease + 0.1 - d * (0.08 + d * 0.02)))` where `round2(x) = Math.round(x * 100) / 100`.
-3. If q < 3: `reps = 0`, `interval = 1`. Else `reps = repetitions + 1`; `interval = reps === 1 ? 1 : reps === 2 ? 6 : Math.min(MAX_INTERVAL_DAYS, Math.round(card.interval * card.ease))` (old ease, see open question 1). Export `MAX_INTERVAL_DAYS = 365`.
+3. If q < 3: `reps = 0`, `interval = 1`. Else `reps = repetitions + 1`; `interval = reps === 1 ? 1 : reps === 2 ? 6 : Math.max(1, Math.min(MAX_INTERVAL_DAYS, Math.round(card.interval * card.ease)))` (old ease, see open question 1). Export `MAX_INTERVAL_DAYS = 365`.
 4. `dueAt = addDays(today, interval)`. Return `{ ease: newEase, interval, repetitions: reps, dueAt }`.
 
 **Date helpers** (private in `sm2.ts`): `parseIsoDate` checks `/^\d{4}-\d{2}-\d{2}$/`, builds `Date.UTC(y, m - 1, d)` and rejects it if the round trip differs (catches `2026-02-30`). `addDays` adds `days * 86_400_000` ms in UTC and returns `toISOString().slice(0, 10)`. UTC avoids daylight-saving bugs. No `Date.now()`.
@@ -88,7 +88,8 @@ Quiz generator for P7-P9: 0-8 questions with unique ids (`q${i}`), concepts from
 | 4 | 2026-12-05 | 4 | 2.38 | 1 | 1 | 2026-12-06 |
 
 Step 3: d = 3, ease = 2.7 + 0.1 - 3 * 0.14 = 2.38. Step 4: d = 1, ease = 2.38 + 0.1 - 0.1 = 2.38. Ease is rounded to 2 decimals, so compare it exactly with `toBe`.
-Also: card `{ ease: 2.5, interval: 6, repetitions: 2 }` rated 4 on 2026-11-27 -> interval `round(6 * 2.5) = 15`, ease 2.5, dueAt `2026-12-12` (proves old ease is used).
+Also: card `{ ease: 2.5, interval: 6, repetitions: 2 }` rated 5 on 2026-11-27 -> interval `round(6 * 2.5) = 15` (the new ease 2.6 would give 16), ease 2.6, dueAt `2026-12-12`. This proves the old ease is used. (Fixed after review: the earlier example rated 4, which leaves ease unchanged, so it could not tell old from new ease.)
+Minimum: card `{ ease: 2.5, interval: 0, repetitions: 2 }` rated 5 -> interval 1, not 0.
 Cap: card `{ ease: 2.5, interval: 300, repetitions: 5 }` rated 5 on 2026-11-27 -> interval 365 (not 750), dueAt `2027-11-27`.
 
 **E2 Gate** (`gate.test.ts`): `gateDecision(0.6, 0.7, "soft")` -> `{ allowed: true, understood: false, reason: "soft-below" }`; `gateDecision(0.6, 0.7, "strict")` -> `{ allowed: false, understood: false, reason: "strict-below" }`; `gateDecision(0.7)` -> `{ allowed: true, understood: true, reason: "passed" }`; `gateDecision(0.6)` (default mode is strict) -> `{ allowed: false, understood: false, reason: "strict-below" }`.

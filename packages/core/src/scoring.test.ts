@@ -25,7 +25,7 @@ function e3Answers(explainScore: number): QuizAnswer[] {
 describe("scoreQuiz examples", () => {
   it("E3: mixed answers give 0.48 and three missed concepts", () => {
     const result = scoreQuiz(quiz, e3Answers(0.4));
-    expect(result.score).toBeCloseTo(0.48, 10);
+    expect(result.score).toBe(0.48);
     expect(result.missedConcepts).toEqual(["closures", "async", "modules"]);
     expect(result.answered).toBe(4);
     expect(result.total).toBe(5);
@@ -33,7 +33,7 @@ describe("scoreQuiz examples", () => {
 
   it("E3: a better explain score gives 0.56 and does not miss `modules`", () => {
     const result = scoreQuiz(quiz, e3Answers(0.8));
-    expect(result.score).toBeCloseTo(0.56, 10);
+    expect(result.score).toBe(0.56);
     expect(result.missedConcepts).toEqual(["closures", "async"]);
   });
 
@@ -54,6 +54,31 @@ describe("scoreQuiz examples", () => {
 
   it("returns zeros for an empty quiz", () => {
     expect(scoreQuiz([], [])).toEqual({ score: 0, missedConcepts: [], answered: 0, total: 0 });
+  });
+
+  it("ignores answers on an empty quiz, even invalid ones (req 3.14)", () => {
+    const empty = { score: 0, missedConcepts: [], answered: 0, total: 0 };
+    expect(scoreQuiz([], [{ questionId: "a", kind: "choice", choiceIndex: 0 }])).toEqual(empty);
+    expect(scoreQuiz([], [{ questionId: "a", kind: "graded", score: 99 }])).toEqual(empty);
+  });
+
+  it("rounds the score to 4 decimals so float sums match the pass mark exactly (req 3.2)", () => {
+    const explain = (n: number): QuizQuestion[] =>
+      Array.from({ length: n }, (_, i) => ({ id: `e${i}`, concept: `c${i}`, kind: "explain" as const }));
+    const graded = (n: number, score: number): QuizAnswer[] =>
+      Array.from({ length: n }, (_, i) => ({ questionId: `e${i}`, kind: "graded" as const, score }));
+
+    // Without rounding, 0.7 + 0.7 + 0.7 over 3 gives 0.6999999999999998 and 7 x 0.7 over 7 gives 0.7000000000000001.
+    expect((0.7 + 0.7 + 0.7) / 3).not.toBe(0.7);
+    expect(scoreQuiz(explain(3), graded(3, 0.7)).score).toBe(0.7);
+    expect(scoreQuiz(explain(7), graded(7, 0.7)).score).toBe(0.7);
+
+    // 0.1 + 0.2 = 0.30000000000000004, so the raw average is 0.15000000000000002.
+    const mixed: QuizAnswer[] = [
+      { questionId: "e0", kind: "graded", score: 0.1 },
+      { questionId: "e1", kind: "graded", score: 0.2 },
+    ];
+    expect(scoreQuiz(explain(2), mixed).score).toBe(0.15);
   });
 });
 
@@ -78,6 +103,21 @@ describe("scoreQuiz input checks", () => {
   it("rejects a choice index that is out of range or not an integer", () => {
     for (const choiceIndex of [-1, 2, 0.5, Number.NaN]) {
       expect(() => scoreQuiz(quiz, [{ questionId: "a", kind: "choice", choiceIndex }])).toThrow(RangeError);
+    }
+  });
+
+  it("rejects a choice question with fewer than 2 choices, naming the question id (req 3.13)", () => {
+    const one: QuizQuestion = { id: "one-choice", concept: "loops", kind: "mcq", choices: ["x"], answerIndex: 0 };
+    const none: QuizQuestion = { id: "no-choice", concept: "loops", kind: "what-if", choices: [], answerIndex: 0 };
+    expect(() => scoreQuiz([one], [])).toThrow(/one-choice/);
+    expect(() => scoreQuiz([none], [])).toThrow(/no-choice/);
+  });
+
+  it("rejects a correct answerIndex that is out of range or not an integer, naming the id (req 3.13)", () => {
+    for (const answerIndex of [-1, 2, 0.5, Number.NaN]) {
+      const bad: QuizQuestion = { id: "bad-index", concept: "loops", kind: "mcq", choices: ["x", "y"], answerIndex };
+      expect(() => scoreQuiz([bad], [])).toThrow(RangeError);
+      expect(() => scoreQuiz([bad], [])).toThrow(/bad-index/);
     }
   });
 
@@ -178,6 +218,29 @@ describe("scoreQuiz properties", () => {
         expect(new Set(missedConcepts).size).toBe(missedConcepts.length);
         const known = new Set(questions.map((q) => q.concept));
         for (const concept of missedConcepts) expect(known.has(concept)).toBe(true);
+      }),
+    );
+  });
+
+  it("P9a: every unanswered question's concept is in missedConcepts", () => {
+    fc.assert(
+      fc.property(quizWithAnswers, ({ questions, answers }) => {
+        const answeredIds = new Set(answers.map((a) => a.questionId));
+        const { missedConcepts } = scoreQuiz(questions, answers);
+        for (const q of questions) {
+          if (!answeredIds.has(q.id)) expect(missedConcepts).toContain(q.concept);
+        }
+      }),
+    );
+  });
+
+  it("P9b: answering nothing misses every distinct concept, in question order", () => {
+    fc.assert(
+      fc.property(quizArb, (questions) => {
+        const result = scoreQuiz(questions, []);
+        expect(result.missedConcepts).toEqual([...new Set(questions.map((q) => q.concept))]);
+        expect(result.score).toBe(0);
+        expect(result.answered).toBe(0);
       }),
     );
   });

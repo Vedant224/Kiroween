@@ -52,11 +52,35 @@ describe("gateDecision examples", () => {
 const fraction = fc.double({ min: 0, max: 1, noNaN: true });
 const mode = fc.constantFrom<GateMode>("off", "soft", "strict");
 
+// A (score, passMark) pair. Half the time both are equal, so the boundary score === passMark is tested often.
+const scoreAndMark = fc.oneof(
+  fc.tuple(fraction, fraction),
+  fraction.map((x): [number, number] => [x, x]),
+);
+
 describe("gateDecision properties", () => {
   it("P10: strict mode allows exactly when score >= passMark", () => {
     fc.assert(
-      fc.property(fraction, fraction, (score, passMark) => {
+      fc.property(scoreAndMark, ([score, passMark]) => {
         expect(gateDecision(score, passMark, "strict").allowed).toBe(score >= passMark);
+      }),
+    );
+  });
+
+  it("P10a: soft mode always allows", () => {
+    fc.assert(
+      fc.property(scoreAndMark, ([score, passMark]) => {
+        expect(gateDecision(score, passMark, "soft").allowed).toBe(true);
+      }),
+    );
+  });
+
+  it("P10b: reason matches the mode and whether the score reached the pass mark", () => {
+    fc.assert(
+      fc.property(scoreAndMark, mode, ([score, passMark], m) => {
+        const passed = score >= passMark;
+        const expected = m === "off" ? "gate-off" : passed ? "passed" : m === "soft" ? "soft-below" : "strict-below";
+        expect(gateDecision(score, passMark, m).reason).toBe(expected);
       }),
     );
   });
@@ -71,7 +95,7 @@ describe("gateDecision properties", () => {
 
   it("P12: understood is score >= passMark in every mode", () => {
     fc.assert(
-      fc.property(fraction, fraction, mode, (score, passMark, m) => {
+      fc.property(scoreAndMark, mode, ([score, passMark], m) => {
         expect(gateDecision(score, passMark, m).understood).toBe(score >= passMark);
       }),
     );
